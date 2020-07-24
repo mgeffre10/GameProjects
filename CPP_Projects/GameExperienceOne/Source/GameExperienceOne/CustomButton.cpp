@@ -2,6 +2,8 @@
 
 
 #include "CustomButton.h"
+#include "GEOGameInstance.h"
+
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -65,8 +67,13 @@ void ACustomButton::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 {
 	OverlappingActors++;
 
-	PushButton();
-	bIsPressed = true;
+	if (!bIsPressed)
+	{
+		PushButton();
+		bIsPressed = true;
+
+		GetGameInstance<UGEOGameInstance>()->AddButtonToGuess(this);
+	}
 }
 
 void ACustomButton::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
