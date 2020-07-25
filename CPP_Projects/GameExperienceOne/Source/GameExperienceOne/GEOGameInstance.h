@@ -74,6 +74,18 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Custom Attributes")
 	TEnumAsByte<EGameOverReason> GameOverReason;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Custom Attributes")
+	class UMainMenuWidget* MainMenuWidget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Custom Attributes")
+	class UCurrentCodeWidget* CurrentCodeWidget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Custom Attributes")
+	class UPreviousCodesWidget* PreviousCodeWidget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Custom Attributes")
+	class UGameOverWidget* GameOverWidget;
+
 	virtual void Init() override;
 
 	/* Sets Difficulty level, coide size and correct button code based on user input. Called in the MainMenuWidget Blueprint.*/

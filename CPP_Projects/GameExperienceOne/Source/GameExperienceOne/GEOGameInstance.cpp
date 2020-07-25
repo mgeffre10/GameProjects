@@ -2,6 +2,11 @@
 
 
 #include "GEOGameInstance.h"
+#include "CodeWidget.h"
+#include "CurrentCodeWidget.h"
+#include "GameOverWidget.h"
+#include "PreviousCodesWidget.h"
+
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "Math/UnrealMathUtility.h"
@@ -52,8 +57,8 @@ void UGEOGameInstance::StoreButtons(TArray<ACustomButton*> ButtonList)
 void UGEOGameInstance::AddButtonToGuess(ACustomButton* Button)
 {
 	GuessedButtonCode.ButtonCode.Add(Button);
+	CurrentCodeWidget->CodeWidget->UpdateCodeDisplay(GuessedButtonCode.ButtonCode);
 
-	UE_LOG(LogTemp, Warning, TEXT("%s added to current guess."), *Button->GetName());
 
 	if (GuessedButtonCode.ButtonCode.Num() == CorrectButtonCode.ButtonCode.Num())
 	{
@@ -63,28 +68,24 @@ void UGEOGameInstance::AddButtonToGuess(ACustomButton* Button)
 
 void UGEOGameInstance::CheckGuess()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Guessed Button Code Length: %d"), GuessedButtonCode.ButtonCode.Num());
-	UE_LOG(LogTemp, Warning, TEXT("Correct Button Code Length: %d"), CorrectButtonCode.ButtonCode.Num());
-	UE_LOG(LogTemp, Warning, TEXT("Total Guess Count: %d"), TotalGuessCount);
-
 	for (int i = 0; i < CorrectButtonCode.ButtonCode.Num(); i++)
 	{
 		if (CorrectButtonCode.ButtonCode[i] != GuessedButtonCode.ButtonCode[i])
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Incorrect Guess!"));
 			CurrentGuessCount++;
-			GuessedButtonCode.ButtonCode.Empty();
-			
+
 			if (CurrentGuessCount == TotalGuessCount)
 			{
 				GameOver(EGameOverReason::EGOR_RanOutOfGuesses);
+				return;
 			}
 
+			CurrentCodeWidget->CodeWidget->ResetCodeDisplay();
+			PreviousCodeWidget->AddGuessToWidget(GuessedButtonCode.ButtonCode);
+			GuessedButtonCode.ButtonCode.Empty();
 			return;
 		}
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("You have guessed the code!"));
 
 	GameOver(EGameOverReason::EGOR_CorrectGuess);
 }
@@ -92,7 +93,18 @@ void UGEOGameInstance::CheckGuess()
 void UGEOGameInstance::GameOver(TEnumAsByte<EGameOverReason> Reason)
 {
 	bIsGameOver = true;
-	GameOverReason = Reason;	
+	GameOverReason = Reason;
+
+	CurrentCodeWidget->RemoveFromParent();
+	PreviousCodeWidget->RemoveFromParent();
+	GameOverWidget->AddToViewport();
+
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+
+	
+	PlayerController->SetInputMode(FInputModeUIOnly());
+	PlayerController->bShowMouseCursor = true;
+	PlayerController->GetPawn()->DisableInput(PlayerController);
 }
 
 void UGEOGameInstance::ResetGame()

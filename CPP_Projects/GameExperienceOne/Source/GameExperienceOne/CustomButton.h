@@ -6,6 +6,15 @@
 #include "GameFramework/Actor.h"
 #include "CustomButton.generated.h"
 
+UENUM(BlueprintType)
+enum EButtonColor {
+	EBC_Blue		UMETA(DisplayName = "Blue"),
+	EBC_Green		UMETA(DisplayName = "Green"),
+	EBC_Red			UMETA(DisplayName = "Red"),
+	EBC_Yellow		UMETA(DisplayName = "Yellow"),
+	EBC_MAX
+};
+
 UCLASS()
 class GAMEEXPERIENCEONE_API ACustomButton : public AActor
 {
@@ -26,6 +35,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Button Attributes")
 	bool bIsPressed;
+
+	UPROPERTY(EditInstanceOnly, Category = "Button Attributes")
+	TEnumAsByte<EButtonColor> Color;
 
 	/* This property specifies if the button should set bIsPressed to false after the player has stepped off it for a x number of seconds*/
 	UPROPERTY(EditAnywhere, Category = "Button Attributes", meta = (ClampMin = "0"))
