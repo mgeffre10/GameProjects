@@ -7,6 +7,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 #include "TimerManager.h"
 
 // Sets default values
@@ -52,6 +54,7 @@ void ACustomButton::ResetButton()
 	if (OverlappingActors == 0)
 	{
 		bIsPressed = false;
+		UGameplayStatics::PlaySoundAtLocation(this, ButtonReleasedSound, GetActorLocation());
 		ReleaseButton();
 	}
 }
@@ -71,7 +74,7 @@ void ACustomButton::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 		PushButton();
 		bIsPressed = true;
-
+		UGameplayStatics::PlaySoundAtLocation(this, ButtonPushedSound, GetActorLocation());USoundConcurrency
 		GetGameInstance<UGEOGameInstance>()->AddButtonToGuess(this);
 	}
 }

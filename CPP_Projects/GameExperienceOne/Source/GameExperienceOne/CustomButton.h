@@ -43,6 +43,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Button Attributes", meta = (ClampMin = "0"))
 	int ResetDelay;
 
+	UPROPERTY(EditAnywhere, Category = "Button Attributes")
+	class USoundBase* ButtonPushedSound;
+
+	UPROPERTY(EditAnywhere, Category = "Button Attributes")
+	class USoundBase* ButtonReleasedSound;
+
 	FVector InitialButtonPosition;
 
 	FTimerHandle DelayHandle;
