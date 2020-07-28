@@ -26,5 +26,6 @@ void UPreviousCodesWidget::AddGuessToWidget(TArray<ACustomButton*> Code)
 
 		UCodeWidget* CodeWidget = Cast<UCodeWidget>(Container->GetChildAt(1));
 		CodeWidget->UpdateCodeDisplay(Code);
+		CodeWidget->ShowCorrectSelections(Code, GameInstance->CorrectButtonCode.ButtonCode);
 	}
 }

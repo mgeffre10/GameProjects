@@ -74,7 +74,7 @@ void ACustomButton::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 		PushButton();
 		bIsPressed = true;
-		UGameplayStatics::PlaySoundAtLocation(this, ButtonPushedSound, GetActorLocation());USoundConcurrency
+		UGameplayStatics::PlaySoundAtLocation(this, ButtonPushedSound, GetActorLocation());
 		GetGameInstance<UGEOGameInstance>()->AddButtonToGuess(this);
 	}
 }

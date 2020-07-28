@@ -7,10 +7,11 @@
 
 #include "Blueprint/WidgetTree.h"
 #include "Components/Border.h"
+#include "Components/BorderSlot.h"
 #include "Components/CanvasPanel.h"
 #include "Components/HorizontalBox.h"
 #include "Components/HorizontalBoxSlot.h"
-
+#include "Components/Image.h"
 
 void UCodeWidget::NativeConstruct()
 {
@@ -29,16 +30,15 @@ void UCodeWidget::NativeConstruct()
 		for (int i = 0; i < CodeSize; i++)
 		{
 			FLinearColor BorderColor = FLinearColor::Gray;
+			FString BorderName = TEXT("CodeEntry") + FString::FromInt(i);
+			UBorder* Border = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), FName(*BorderName));
 
-			UBorder* Border = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), FName(TEXT("CodeEntry" + i)));
-
-			UHorizontalBoxSlot* BorderSlot = Cast<UHorizontalBoxSlot>(CodeContainer->AddChild(Border));
-			
+			UHorizontalBoxSlot* HorizontalSlot = Cast<UHorizontalBoxSlot>(CodeContainer->AddChild(Border));
 
 			FSlateChildSize BorderSize;
 			BorderSize.SizeRule = ESlateSizeRule::Fill;
 			
-			FMargin BorderPadding = FMargin(10.f);
+			FMargin BorderPadding = FMargin(5.f);
 
 			/*switch (GameInstance->DifficultyLevel)
 			{
@@ -53,8 +53,8 @@ void UCodeWidget::NativeConstruct()
 					break;
 			}*/
 
-			BorderSlot->SetSize(BorderSize);
-			BorderSlot->SetPadding(BorderPadding);
+			HorizontalSlot->SetSize(BorderSize);
+			HorizontalSlot->SetPadding(BorderPadding);
 
 			if (ButtonCode.Num())
 			{
@@ -76,16 +76,28 @@ void UCodeWidget::NativeConstruct()
 			}
 
 			Border->SetBrushColor(BorderColor);
+
+			FString ImageName = TEXT("ImageEntry") + FString::FromInt(i);
+
+			UImage* BorderImage = WidgetTree->ConstructWidget<UImage>(UImage::StaticClass(), FName(*ImageName));
+
+			UBorderSlot* BorderSlot = Cast<UBorderSlot>(Border->AddChild(BorderImage));
+
+			//BorderSlot->SetPadding(FMargin(100.f, 50.f));
+			
+			BorderImage->SetVisibility(ESlateVisibility::Hidden);
+			BorderImage->SetBrushFromTexture(CheckmarkImage);
 		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("CodeContainer nullptr"));
 	}
 }
 
 void UCodeWidget::UpdateCodeDisplay(TArray<ACustomButton*> Code)
 {
+
+	UGEOGameInstance* GameInstance = GetGameInstance<UGEOGameInstance>();
+
+	TArray<ACustomButton*> CorrectButtonCode = GameInstance->CorrectButtonCode.ButtonCode;
+
 	for (int i = 0; i < Code.Num(); i++)
 	{
 		ACustomButton* Button = Code[i];
@@ -110,6 +122,19 @@ void UCodeWidget::UpdateCodeDisplay(TArray<ACustomButton*> Code)
 		}
 
 		Border->SetBrushColor(BorderColor);
+	}
+}
+
+void UCodeWidget::ShowCorrectSelections(TArray<ACustomButton*> GuessedCode, TArray<ACustomButton*> CorrectCode)
+{
+	for (int i = 0; i < GuessedCode.Num(); i++)
+	{
+		if (GuessedCode[i] == CorrectCode[i])
+		{
+			UBorder* Border = Cast<UBorder>(CodeContainer->GetAllChildren()[i]);
+
+			Border->GetChildAt(0)->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 }
 

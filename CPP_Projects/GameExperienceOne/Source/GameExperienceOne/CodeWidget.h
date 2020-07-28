@@ -16,6 +16,9 @@ class GAMEEXPERIENCEONE_API UCodeWidget : public UUserWidget
 
 public:
 
+	UPROPERTY(EditAnywhere)
+	class UTexture2D* CheckmarkImage;
+
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -25,6 +28,8 @@ public:
 	TArray<class ACustomButton*> ButtonCode;
 
 	void UpdateCodeDisplay(TArray<ACustomButton*> Code);
+
+	void ShowCorrectSelections(TArray<ACustomButton*> GuessedCode, TArray<ACustomButton*> CorrectCode);
 
 	void ResetCodeDisplay();
 };

@@ -40,13 +40,6 @@ void UGEOGameInstance::UpdateDifficulty(TEnumAsByte<EDifficulty> Difficulty)
 		ACustomButton* Button = Buttons[FMath::RandRange(0, Buttons.Num() - 1)];
 		CorrectButtonCode.ButtonCode.Add(Button);
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Printing CorrectButtonCode"));
-
-	for (ACustomButton* Button : CorrectButtonCode.ButtonCode)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Button: %s"), *Button->GetName())
-	}
 }
 
 void UGEOGameInstance::StoreButtons(TArray<ACustomButton*> ButtonList)
