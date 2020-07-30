@@ -40,19 +40,6 @@ void UCodeWidget::NativeConstruct()
 			
 			FMargin BorderPadding = FMargin(5.f);
 
-			/*switch (GameInstance->DifficultyLevel)
-			{
-				case EDifficulty::ED_Easy:
-					BorderPadding = FMargin(50.f, 100.f);
-					break;
-				case EDifficulty::ED_Medium:
-					BorderPadding = FMargin(20.f);
-					break;
-				case EDifficulty::ED_Hard:
-					BorderPadding = FMargin(10.f, 30.f);
-					break;
-			}*/
-
 			HorizontalSlot->SetSize(BorderSize);
 			HorizontalSlot->SetPadding(BorderPadding);
 
@@ -82,8 +69,6 @@ void UCodeWidget::NativeConstruct()
 			UImage* BorderImage = WidgetTree->ConstructWidget<UImage>(UImage::StaticClass(), FName(*ImageName));
 
 			UBorderSlot* BorderSlot = Cast<UBorderSlot>(Border->AddChild(BorderImage));
-
-			//BorderSlot->SetPadding(FMargin(100.f, 50.f));
 			
 			BorderImage->SetVisibility(ESlateVisibility::Hidden);
 			BorderImage->SetBrushFromTexture(CheckmarkImage);
